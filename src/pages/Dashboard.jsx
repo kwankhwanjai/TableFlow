@@ -192,7 +192,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#EDE2CD]">
+    <div className="min-h-screen bg-[#FFFCF5]">
       <SonnerToaster
         position="top-right"
         toastOptions={{

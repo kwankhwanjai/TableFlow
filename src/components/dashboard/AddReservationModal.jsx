@@ -126,12 +126,15 @@ export default function AddReservationModal({
       note: data.note || "",
     });
   };
-
   const inputClass =
-    "w-full pl-9 pr-3 py-2.5 rounded-xl bg-white/70 border border-[#133951]/10 text-sm text-[#133951] focus:outline-none focus:ring-2 focus:ring-[#5BAAAE]/30 transition-all";
-  const labelClass = "text-xs font-semibold text-[#133951]/60 mb-1 block";
+    "w-full pl-9 pr-3 py-2.5 rounded-xl bg-white border border-slate-200 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-400 transition-all";
+  const labelClass = "text-xs font-semibold text-slate-600 mb-1 block";
   const toggleBtn = (active) =>
-    `flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-medium transition-all ${active ? "bg-[#133951] text-[#EDE2CD]" : "bg-white/50 text-[#133951]/60 hover:bg-white/70"}`;
+    `flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
+      active
+        ? "bg-slate-700 text-white shadow-sm"
+        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+    }`;
 
   return (
     <motion.div
@@ -147,9 +150,9 @@ export default function AddReservationModal({
         exit={{ scale: 0.95, opacity: 0, y: 10 }}
         transition={{ type: "spring", stiffness: 300, damping: 25 }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-[#EDE2CD] rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto scrollbar-thin border border-[#133951]/10"
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto border border-slate-200"
       >
-        <div className="flex items-center justify-between p-5 border-b border-[#133951]/10 sticky top-0 bg-[#EDE2CD] z-10">
+        <div className="flex items-center justify-between p-5 border-b border-slate-200 sticky top-0 bg-white z-10">
           <div className="flex items-center gap-2">
             {isWalkIn ? (
               <Sparkles className="w-5 h-5 text-[#5BAAAE]" />
@@ -176,7 +179,7 @@ export default function AddReservationModal({
           <div>
             <label className={labelClass}>Customer Name *</label>
             <div className="relative">
-              <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#335C67]/40" />
+              <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
                 {...register("customerName", { required: "Name is required" })}
                 className={inputClass}
@@ -194,7 +197,7 @@ export default function AddReservationModal({
             <div>
               <label className={labelClass}>Phone Number *</label>
               <div className="relative">
-                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#335C67]/40" />
+                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
                   {...register("phone", { required: "Phone is required" })}
                   className={inputClass}
@@ -210,7 +213,7 @@ export default function AddReservationModal({
             <div>
               <label className={labelClass}>Guest Count *</label>
               <div className="relative">
-                <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#335C67]/40" />
+                <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
                   type="number"
                   min="1"
@@ -231,7 +234,7 @@ export default function AddReservationModal({
             <div>
               <label className={labelClass}>Reservation Date *</label>
               <div className="relative">
-                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#335C67]/40" />
+                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
                   type="date"
                   {...register("reservationDate", {
@@ -244,7 +247,7 @@ export default function AddReservationModal({
             <div>
               <label className={labelClass}>Reservation Time *</label>
               <div className="relative">
-                <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#335C67]/40" />
+                <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <select {...register("startTime")} className={inputClass}>
                   {VALID_START_TIMES.map((t) => (
                     <option key={t} value={t}>
@@ -277,7 +280,7 @@ export default function AddReservationModal({
           </div>
 
           {watchedTableMode === "auto" && (
-            <div className="rounded-xl bg-[#133951]/8 border border-[#133951]/10 p-3 flex items-center gap-2">
+            <div className="rounded-xl bg-sky-50 border border-sky-200 border border-[#133951]/10 p-3 flex items-center gap-2">
               {autoTable ? (
                 <>
                   <Check className="w-4 h-4 text-[#5BAAAE] shrink-0" />
@@ -299,7 +302,7 @@ export default function AddReservationModal({
           {watchedTableMode === "choose" && (
             <div>
               <div className="relative">
-                <Table2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#335C67]/40" />
+                <Table2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <select {...register("tableNumber")} className={inputClass}>
                   {TABLES.map((t) => (
                     <option key={t} value={t}>
@@ -309,10 +312,10 @@ export default function AddReservationModal({
                 </select>
               </div>
               {conflict && (
-                <div className="mt-2 rounded-xl bg-[#AD2B10]/8 border border-[#AD2B10]/15 p-3">
+                <div className="mt-2 rounded-xl bg-red-50 border border-red-200 border border-[#AD2B10]/15 p-3">
                   <div className="flex items-center gap-1.5 mb-1">
-                    <AlertCircle className="w-4 h-4 text-[#AD2B10] shrink-0" />
-                    <span className="text-sm font-medium text-[#AD2B10]">
+                    <AlertCircle className="w-4 h-4 text-red-600] shrink-0" />
+                    <span className="text-sm font-medium text-red-600">
                       This table is unavailable.
                     </span>
                   </div>
@@ -357,7 +360,7 @@ export default function AddReservationModal({
           <div>
             <label className={labelClass}>Special Note</label>
             <div className="relative">
-              <FileText className="absolute left-3 top-3 w-4 h-4 text-[#335C67]/40" />
+              <FileText className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
               <textarea
                 {...register("note")}
                 rows={2}
@@ -371,7 +374,7 @@ export default function AddReservationModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 rounded-xl bg-white/50 text-[#133951]/70 text-sm font-medium hover:bg-white/70 transition-colors"
+              className="flex-1 py-2.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 text-[#133951]/70 text-sm font-medium hover:bg-white/70 transition-colors"
             >
               Cancel
             </button>

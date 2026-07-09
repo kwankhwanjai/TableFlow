@@ -59,7 +59,7 @@ export default function ReservationGrid({
   }
 
   return (
-    <div className="rounded-2xl bg-[#EDE2CD]/50 border border-[#133951]/8 shadow-sm overflow-hidden">
+    <div className="rounded-2xl bg-[#FFFCF5]/50 border border-[#133951]/8 shadow-sm overflow-hidden">
       {/* Header */}
       <div className="flex border-b border-[#133951]/10 bg-[#133951]/5">
         <div className="w-20 shrink-0 p-3 font-display text-xs font-semibold text-[#133951]/50">

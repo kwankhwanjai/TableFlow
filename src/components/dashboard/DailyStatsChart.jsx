@@ -59,9 +59,7 @@ export default function DailyStatsChart() {
       try {
         const dates = getDateRange(range);
         const allReservations = await Promise.all(
-          dates.map((d) =>
-            Reservation.filter({ reservationDate: d }),
-          ),
+          dates.map((d) => Reservation.filter({ reservationDate: d })),
         );
         const chartData = dates.map((date, i) => {
           const rsvs = allReservations[i] || [];
@@ -90,7 +88,7 @@ export default function DailyStatsChart() {
   }, [range]);
 
   return (
-    <div className="rounded-2xl bg-[#EDE2CD]/60 border border-[#133951]/10 shadow-sm p-5">
+    <div className="rounded-2xl bg-[#]/60 border border-[#FFFCF5]/10 shadow-sm p-5">
       <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
         <div className="flex items-center gap-2">
           <div className="w-9 h-9 rounded-xl bg-[#133951] flex items-center justify-center">

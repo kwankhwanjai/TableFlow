@@ -22,7 +22,7 @@ export default function TopNav({
   currentTime,
 }) {
   return (
-    <header className="sticky top-0 z-30 bg-[#EDE2CD]/95 backdrop-blur-md border-b border-[#133951]/10 shadow-sm">
+    <header className="sticky top-0 z-30 bg-[#FFFCF5]/95 backdrop-blur-md border-b border-[#133951]/10 shadow-sm">
       <div className="max-w-[1600px] mx-auto px-6 py-4">
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-3">
