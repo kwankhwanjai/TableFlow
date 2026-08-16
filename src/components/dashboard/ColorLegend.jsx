@@ -1,32 +1,94 @@
+import { memo } from "react";
+
 const LEGEND = [
-  { label: "Available", color: "#EDE2CD", border: "#133951" },
-  { label: "Reserved", color: "#E2A300", border: "#E2A300" },
-  { label: "Checked-in", color: "#133951", border: "#133951" },
-  { label: "Walk-in", color: "#5BAAAE", border: "#5BAAAE" },
-  { label: "No Show", color: "#AD2B10", border: "#AD2B10" },
-  { label: "Completed", color: "#9CA3AF", border: "#9CA3AF" },
+  {
+    label: "Available",
+    dotClass: "bg-white border-slate-300",
+  },
+  {
+    label: "Reserved",
+    dotClass: "bg-blue-500 border-blue-500",
+  },
+  {
+    label: "Checked-in",
+    dotClass: "bg-emerald-500 border-emerald-500",
+  },
+  {
+    label: "Walk-in",
+    dotClass: "bg-amber-500 border-amber-500",
+  },
+  {
+    label: "No Show",
+    dotClass: "bg-red-500 border-red-500",
+  },
+  {
+    label: "Completed",
+    dotClass: "bg-slate-400 border-slate-400",
+  },
 ];
 
-export default function ColorLegend() {
+function ColorLegend() {
   return (
-    <div className="flex items-center gap-4 flex-wrap">
-      <span className="text-xs font-semibold text-[#133951]/50 uppercase tracking-wider">
-        Legend
+    <div
+      className="
+        flex
+        items-center
+        gap-3
+        overflow-x-auto
+        scrollbar-none
+      "
+      aria-label="Reservation status legend"
+    >
+      <span
+        className="
+          shrink-0
+          text-[11px]
+          font-semibold
+          uppercase
+          tracking-wider
+          text-slate-400
+        "
+      >
+        Status
       </span>
-      <div className="flex items-center gap-3 flex-wrap">
+
+      <div className="flex items-center gap-3">
         {LEGEND.map((item) => (
-          <div key={item.label} className="flex items-center gap-1.5">
-            <div
-              className="w-3.5 h-3.5 rounded-md border"
-              style={{
-                backgroundColor: item.color,
-                borderColor: item.border + "60",
-              }}
+          <div
+            key={item.label}
+            className="
+              flex
+              shrink-0
+              items-center
+              gap-1.5
+            "
+          >
+            <span
+              className={`
+                h-2.5
+                w-2.5
+                rounded-full
+                border
+                ${item.dotClass}
+              `}
+              aria-hidden="true"
             />
-            <span className="text-xs text-[#133951]/60">{item.label}</span>
+
+            <span
+              className="
+                whitespace-nowrap
+                text-xs
+                font-medium
+                text-slate-500
+              "
+            >
+              {item.label}
+            </span>
           </div>
         ))}
       </div>
     </div>
   );
 }
+
+export default memo(ColorLegend);
