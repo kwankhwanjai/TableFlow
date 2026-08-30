@@ -1,33 +1,26 @@
 import React, { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+import {
+  AlertCircle,
+  ArrowRight,
+  CheckCircle2,
+  Eye,
+  EyeOff,
+  Loader2,
+  Lock,
+  Mail,
+  ShieldCheck,
+} from "lucide-react";
 
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/AuthContext";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-import {
-  Mail,
-  Lock,
-  Loader2,
-  Eye,
-  EyeOff,
-  AlertCircle,
-  ArrowRight,
-} from "lucide-react";
-
 import GoogleIcon from "@/components/GoogleIcon";
 
-/* -------------------------------------------------------------------------- */
-/*                                  HELPERS                                   */
-/* -------------------------------------------------------------------------- */
-
 function getAuthErrorMessage(error) {
-  if (!error) {
-    return "Unable to sign in. Please try again.";
-  }
+  if (!error) return "Unable to sign in. Please try again.";
 
   const code = error.code;
   const status = error.status;
@@ -58,67 +51,53 @@ function getAuthErrorMessage(error) {
   return "Unable to sign in right now. Please try again.";
 }
 
-/* -------------------------------------------------------------------------- */
-/*                                   LOGIN                                    */
-/* -------------------------------------------------------------------------- */
+const fieldClassName = `
+  h-12 rounded-xl border bg-white pl-11 pr-4 text-sm shadow-none
+  transition-[border-color,box-shadow,background-color]
+  placeholder:text-zinc-400 hover:border-[var(--accent-border)]
+  focus-visible:border-[var(--accent)] focus-visible:ring-2
+  focus-visible:ring-[var(--accent-bg)] disabled:bg-zinc-50
+`;
+
+function BrandMark() {
+  return (
+    <div className="flex items-center gap-3">
+      <div
+        className="flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-sm"
+        style={{ backgroundColor: "var(--accent)" }}
+      >
+        <span className="text-sm font-semibold">D</span>
+      </div>
+      <div>
+        <p className="text-sm font-semibold tracking-tight text-zinc-950">
+          Document Control
+        </p>
+        <p className="text-[11px] text-zinc-500">Secure workspace</p>
+      </div>
+    </div>
+  );
+}
 
 export default function Login() {
   const navigate = useNavigate();
-
   const { isAuthenticated, isLoadingAuth } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [showPassword, setShowPassword] = useState(false);
-
-  // null | "password" | "google"
   const [activeAction, setActiveAction] = useState(null);
-
   const [error, setError] = useState("");
 
   const isBusy = activeAction !== null;
-
-  /* ------------------------------------------------------------------------ */
-  /*                              AUTH LOADING                                */
-  /* ------------------------------------------------------------------------ */
-
-  if (isLoadingAuth) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div
-          role="status"
-          aria-live="polite"
-          className="flex flex-col items-center gap-4"
-        >
-          <div className="w-11 h-11 rounded-full border border-zinc-200 flex items-center justify-center">
-            <Loader2 className="w-4 h-4 animate-spin text-zinc-900" />
-          </div>
-
-          <span className="text-sm text-zinc-500">
-            Checking your session...
-          </span>
-        </div>
-      </div>
-    );
-  }
-
-  /* ------------------------------------------------------------------------ */
-  /*                         ALREADY AUTHENTICATED                            */
-  /* ------------------------------------------------------------------------ */
+  const isFormDisabled = isBusy || isLoadingAuth;
 
   if (isAuthenticated) {
     return <Navigate to="/" replace />;
   }
 
-  /* ------------------------------------------------------------------------ */
-  /*                              EMAIL LOGIN                                 */
-  /* ------------------------------------------------------------------------ */
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    if (isBusy) return;
+    if (isFormDisabled) return;
 
     const normalizedEmail = email.trim().toLowerCase();
 
@@ -141,28 +120,18 @@ export default function Login() {
         password,
       });
 
-      if (authError) {
-        throw authError;
-      }
-
-      navigate("/", {
-        replace: true,
-      });
+      if (authError) throw authError;
+      navigate("/", { replace: true });
     } catch (err) {
       console.error("Password sign-in failed:", err);
-
       setError(getAuthErrorMessage(err));
     } finally {
       setActiveAction(null);
     }
   };
 
-  /* ------------------------------------------------------------------------ */
-  /*                              GOOGLE LOGIN                                */
-  /* ------------------------------------------------------------------------ */
-
   const handleGoogle = async () => {
-    if (isBusy) return;
+    if (isFormDisabled) return;
 
     setError("");
     setActiveAction("google");
@@ -170,206 +139,180 @@ export default function Login() {
     try {
       const { error: authError } = await supabase.auth.signInWithOAuth({
         provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/`,
-        },
+        options: { redirectTo: `${window.location.origin}/` },
       });
 
-      if (authError) {
-        throw authError;
-      }
+      if (authError) throw authError;
     } catch (err) {
       console.error("Google sign-in failed:", err);
-
       setError(getAuthErrorMessage(err));
       setActiveAction(null);
     }
   };
 
-  /* ------------------------------------------------------------------------ */
-  /*                                   UI                                     */
-  /* ------------------------------------------------------------------------ */
-
   return (
     <main className="min-h-screen bg-white text-zinc-950">
-      <div className="min-h-screen grid lg:grid-cols-[1fr_1px_1fr]">
-        {/* ------------------------------------------------------------------ */}
-        {/*                          LEFT / BRAND                              */}
-        {/* ------------------------------------------------------------------ */}
+      <div className="grid min-h-screen lg:grid-cols-[minmax(380px,0.92fr)_1.08fr]">
+        <aside
+          className="relative hidden overflow-hidden border-r lg:flex lg:flex-col lg:justify-between lg:px-14 lg:py-12 xl:px-20 xl:py-16"
+          style={{
+            backgroundColor: "var(--accent-bg)",
+            borderColor: "var(--accent-border)",
+          }}
+        >
+          <div
+            className="pointer-events-none absolute -right-28 -top-28 h-80 w-80 rounded-full opacity-20 blur-3xl"
+            style={{ backgroundColor: "var(--accent)" }}
+          />
+          <div
+            className="pointer-events-none absolute -bottom-36 -left-28 h-96 w-96 rounded-full opacity-10 blur-3xl"
+            style={{ backgroundColor: "var(--accent)" }}
+          />
 
-        <section className="hidden lg:flex flex-col justify-between px-14 py-12 xl:px-20 xl:py-16">
-          {/* Logo / Brand */}
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-black text-white rounded-xl flex items-center justify-center">
-              <span className="text-sm font-semibold">D</span>
-            </div>
-
-            <span className="text-sm font-semibold tracking-tight">
-              Document Control
-            </span>
+          <div className="relative z-10">
+            <BrandMark />
           </div>
 
-          {/* Main Message */}
-          <div className="max-w-lg">
-            <div className="inline-flex items-center gap-2 mb-7">
-              <span className="w-2 h-2 rounded-full bg-black" />
+          <div className="relative z-10 max-w-xl">
+            <span
+              className="mb-6 inline-flex items-center gap-2 rounded-full border bg-white/70 px-3 py-1.5 text-xs font-medium backdrop-blur"
+              style={{
+                color: "var(--accent)",
+                borderColor: "var(--accent-border)",
+              }}
+            >
+              <ShieldCheck className="h-3.5 w-3.5" />
+              Workspace access
+            </span>
 
-              <span className="text-xs font-medium tracking-wide uppercase text-zinc-500">
-                Workspace
-              </span>
-            </div>
-
-            <h1 className="text-[42px] xl:text-[52px] leading-[1.08] tracking-[-0.04em] font-semibold">
-              Manage your work.
+            <h1 className="max-w-lg text-[44px] font-semibold leading-[1.06] tracking-[-0.045em] xl:text-[56px]">
+              Everything you need,
               <br />
-              Keep it simple.
+              in one workspace.
             </h1>
 
-            <p className="mt-6 max-w-md text-[15px] leading-7 text-zinc-500">
-              Track documents, email requests and responsibilities from one
-              clean workspace.
+            <p className="mt-6 max-w-md text-[15px] leading-7 text-zinc-600">
+              Manage documents, requests and responsibilities without losing
+              track of what matters.
             </p>
+
+            <div className="mt-9 grid max-w-md gap-3 text-sm text-zinc-700">
+              {[
+                "Simple document tracking",
+                "Secure account access",
+                "Clear team ownership",
+              ].map((item) => (
+                <div key={item} className="flex items-center gap-3">
+                  <span
+                    className="flex h-6 w-6 items-center justify-center rounded-full"
+                    style={{
+                      color: "var(--accent)",
+                      backgroundColor: "rgba(255,255,255,.72)",
+                    }}
+                  >
+                    <CheckCircle2 className="h-4 w-4" />
+                  </span>
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Footer */}
-          <div className="flex items-center justify-between text-xs text-zinc-400">
-            <span>Secure workspace</span>
+          <div className="relative z-10 flex items-center justify-between text-xs text-zinc-500">
+            <span>Protected by secure authentication</span>
             <span>© {new Date().getFullYear()}</span>
           </div>
-        </section>
+        </aside>
 
-        {/* Desktop Divider */}
-        <div className="hidden lg:block bg-zinc-100" />
-
-        {/* ------------------------------------------------------------------ */}
-        {/*                            LOGIN SIDE                              */}
-        {/* ------------------------------------------------------------------ */}
-
-        <section className="flex min-h-screen items-center justify-center px-6 py-10 sm:px-10 lg:px-14 xl:px-20">
-          <div className="w-full max-w-[420px]">
-            {/* Mobile Brand */}
-            <div className="lg:hidden mb-14 flex items-center gap-3">
-              <div className="w-9 h-9 bg-black text-white rounded-xl flex items-center justify-center">
-                <span className="text-sm font-semibold">D</span>
-              </div>
-
-              <span className="text-sm font-semibold tracking-tight">
-                Document Control
-              </span>
+        <section className="flex min-h-screen items-center justify-center px-5 py-8 sm:px-8 lg:px-12 xl:px-20">
+          <div className="w-full max-w-[440px]">
+            <div className="mb-10 lg:hidden">
+              <BrandMark />
             </div>
 
-            {/* Header */}
-            <header className="mb-9">
-              <p className="mb-3 text-xs font-medium uppercase tracking-[0.15em] text-zinc-400">
-                Account access
-              </p>
+            <div className="mb-8 flex items-start justify-between gap-4">
+              <header>
+                <p
+                  className="mb-2 text-xs font-semibold uppercase tracking-[0.16em]"
+                  style={{ color: "var(--accent)" }}
+                >
+                  Welcome back
+                </p>
+                <h2 className="text-3xl font-semibold tracking-[-0.035em] sm:text-[36px]">
+                  Sign in to continue
+                </h2>
+                <p className="mt-3 text-sm leading-6 text-zinc-500">
+                  Use your work email or continue with Google.
+                </p>
+              </header>
 
-              <h2 className="text-3xl sm:text-[34px] font-semibold tracking-[-0.035em] text-black">
-                Welcome back
-              </h2>
-
-              <p className="mt-3 text-sm leading-6 text-zinc-500">
-                Enter your details to access your workspace.
-              </p>
-            </header>
-
-            {/* -------------------------------------------------------------- */}
-            {/*                            GOOGLE                              */}
-            {/* -------------------------------------------------------------- */}
+              {isLoadingAuth && (
+                <div
+                  className="mt-1 flex shrink-0 items-center gap-2 rounded-full border px-2.5 py-1 text-[11px] text-zinc-500"
+                  style={{ borderColor: "var(--accent-border)" }}
+                  role="status"
+                  aria-live="polite"
+                >
+                  <Loader2
+                    className="h-3 w-3 animate-spin"
+                    style={{ color: "var(--accent)" }}
+                  />
+                  Session
+                </div>
+              )}
+            </div>
 
             <Button
               type="button"
               variant="outline"
-              disabled={isBusy}
+              disabled={isFormDisabled}
               onClick={handleGoogle}
-              className="
-                w-full
-                h-12
-                rounded-xl
-                border-zinc-200
-                bg-white
-                text-zinc-900
-                font-medium
-                shadow-none
-                transition-all
-                hover:bg-zinc-50
-                hover:border-zinc-300
-                disabled:bg-zinc-50
-              "
+              className="h-12 w-full rounded-xl bg-white font-medium shadow-none transition-[border-color,background-color,box-shadow] hover:bg-zinc-50"
+              style={{ borderColor: "var(--accent-border)" }}
             >
               {activeAction === "google" ? (
                 <>
-                  <Loader2
-                    className="w-4 h-4 mr-2 animate-spin"
-                    aria-hidden="true"
-                  />
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Connecting...
                 </>
               ) : (
                 <>
-                  <GoogleIcon className="w-5 h-5 mr-2" />
+                  <GoogleIcon className="mr-2 h-5 w-5" />
                   Continue with Google
                 </>
               )}
             </Button>
 
-            {/* -------------------------------------------------------------- */}
-            {/*                            DIVIDER                             */}
-            {/* -------------------------------------------------------------- */}
-
-            <div className="relative my-7">
+            <div className="relative my-6">
               <div
                 className="absolute inset-0 flex items-center"
                 aria-hidden="true"
               >
                 <div className="w-full border-t border-zinc-100" />
               </div>
-
               <div className="relative flex justify-center">
                 <span className="bg-white px-3 text-[11px] font-medium uppercase tracking-[0.12em] text-zinc-400">
-                  or
+                  or continue with email
                 </span>
               </div>
             </div>
-
-            {/* -------------------------------------------------------------- */}
-            {/*                             ERROR                              */}
-            {/* -------------------------------------------------------------- */}
 
             {error && (
               <div
                 role="alert"
                 aria-live="assertive"
-                className="
-                  mb-6
-                  flex
-                  items-start
-                  gap-3
-                  rounded-xl
-                  border
-                  border-zinc-200
-                  bg-zinc-50
-                  px-4
-                  py-3.5
-                  text-sm
-                  text-zinc-800
-                "
+                className="mb-5 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
               >
-                <AlertCircle
-                  className="mt-0.5 w-4 h-4 shrink-0 text-black"
-                  aria-hidden="true"
-                />
-
+                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
                 <span className="leading-5">{error}</span>
               </div>
             )}
 
-            {/* -------------------------------------------------------------- */}
-            {/*                             FORM                               */}
-            {/* -------------------------------------------------------------- */}
-
-            <form onSubmit={handleSubmit} className="space-y-5">
-              {/* EMAIL */}
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-5"
+              aria-busy={isBusy}
+            >
               <div className="space-y-2">
                 <Label
                   htmlFor="email"
@@ -377,24 +320,11 @@ export default function Login() {
                 >
                   Email address
                 </Label>
-
-                <div className="relative group">
+                <div className="group relative">
                   <Mail
-                    className="
-                      pointer-events-none
-                      absolute
-                      left-4
-                      top-1/2
-                      w-4
-                      h-4
-                      -translate-y-1/2
-                      text-zinc-400
-                      transition-colors
-                      group-focus-within:text-black
-                    "
+                    className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400 transition-colors group-focus-within:text-[var(--accent)]"
                     aria-hidden="true"
                   />
-
                   <Input
                     id="email"
                     name="email"
@@ -403,42 +333,20 @@ export default function Login() {
                     autoComplete="email"
                     autoCapitalize="none"
                     autoCorrect="off"
-                    autoFocus
                     spellCheck={false}
                     placeholder="name@company.com"
                     value={email}
-                    disabled={isBusy}
+                    disabled={isFormDisabled}
                     onChange={(event) => {
                       setEmail(event.target.value);
-
-                      if (error) {
-                        setError("");
-                      }
+                      if (error) setError("");
                     }}
-                    className="
-                      h-12
-                      rounded-xl
-                      border-zinc-200
-                      bg-white
-                      pl-11
-                      pr-4
-                      text-sm
-                      text-black
-                      shadow-none
-                      placeholder:text-zinc-400
-                      transition-all
-                      hover:border-zinc-300
-                      focus-visible:border-black
-                      focus-visible:ring-1
-                      focus-visible:ring-black
-                      disabled:bg-zinc-50
-                    "
+                    className={fieldClassName}
                     required
                   />
                 </div>
               </div>
 
-              {/* PASSWORD */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between gap-4">
                   <Label
@@ -447,44 +355,20 @@ export default function Login() {
                   >
                     Password
                   </Label>
-
                   <Link
                     to="/forgot-password"
-                    className="
-                      text-xs
-                      font-medium
-                      text-zinc-500
-                      transition-colors
-                      hover:text-black
-                      hover:underline
-                      underline-offset-4
-                      focus-visible:outline-none
-                      focus-visible:ring-2
-                      focus-visible:ring-black
-                      rounded-sm
-                    "
+                    className="rounded-sm text-xs font-medium underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                    style={{ color: "var(--accent)" }}
                   >
                     Forgot password?
                   </Link>
                 </div>
 
-                <div className="relative group">
+                <div className="group relative">
                   <Lock
-                    className="
-                      pointer-events-none
-                      absolute
-                      left-4
-                      top-1/2
-                      w-4
-                      h-4
-                      -translate-y-1/2
-                      text-zinc-400
-                      transition-colors
-                      group-focus-within:text-black
-                    "
+                    className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400 transition-colors group-focus-within:text-[var(--accent)]"
                     aria-hidden="true"
                   />
-
                   <Input
                     id="password"
                     name="password"
@@ -492,152 +376,67 @@ export default function Login() {
                     autoComplete="current-password"
                     placeholder="Enter your password"
                     value={password}
-                    disabled={isBusy}
+                    disabled={isFormDisabled}
                     onChange={(event) => {
                       setPassword(event.target.value);
-
-                      if (error) {
-                        setError("");
-                      }
+                      if (error) setError("");
                     }}
-                    className="
-                      h-12
-                      rounded-xl
-                      border-zinc-200
-                      bg-white
-                      pl-11
-                      pr-12
-                      text-sm
-                      text-black
-                      shadow-none
-                      placeholder:text-zinc-400
-                      transition-all
-                      hover:border-zinc-300
-                      focus-visible:border-black
-                      focus-visible:ring-1
-                      focus-visible:ring-black
-                      disabled:bg-zinc-50
-                    "
+                    className={`${fieldClassName} pr-12`}
                     required
                   />
-
                   <button
                     type="button"
-                    disabled={isBusy}
+                    disabled={isFormDisabled}
                     onClick={() => setShowPassword((current) => !current)}
-                    className="
-                      absolute
-                      right-1.5
-                      top-1/2
-                      flex
-                      h-9
-                      w-9
-                      -translate-y-1/2
-                      items-center
-                      justify-center
-                      rounded-lg
-                      text-zinc-400
-                      transition-all
-                      hover:bg-zinc-100
-                      hover:text-black
-                      focus-visible:outline-none
-                      focus-visible:ring-2
-                      focus-visible:ring-black
-                      disabled:cursor-not-allowed
-                      disabled:opacity-50
-                    "
+                    className="absolute right-1.5 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-lg text-zinc-400 transition-[color,background-color] hover:bg-zinc-100 hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] disabled:opacity-50"
                     aria-label={
                       showPassword ? "Hide password" : "Show password"
                     }
                     aria-pressed={showPassword}
                   >
                     {showPassword ? (
-                      <EyeOff className="w-4 h-4" aria-hidden="true" />
+                      <EyeOff className="h-4 w-4" />
                     ) : (
-                      <Eye className="w-4 h-4" aria-hidden="true" />
+                      <Eye className="h-4 w-4" />
                     )}
                   </button>
                 </div>
               </div>
 
-              {/* LOGIN BUTTON */}
               <Button
                 type="submit"
-                disabled={isBusy || !email.trim() || !password}
-                className="
-                  group
-                  w-full
-                  h-12
-                  rounded-xl
-                  bg-black
-                  text-white
-                  font-medium
-                  shadow-none
-                  transition-all
-                  hover:bg-zinc-800
-                  active:scale-[0.995]
-                  disabled:bg-zinc-200
-                  disabled:text-zinc-500
-                  disabled:opacity-100
-                "
+                disabled={isFormDisabled || !email.trim() || !password}
+                className="group h-12 w-full rounded-xl text-white shadow-none transition-[transform,filter,opacity] hover:brightness-95 active:scale-[0.995] disabled:opacity-50"
+                style={{ backgroundColor: "var(--accent)" }}
               >
                 {activeAction === "password" ? (
                   <>
-                    <Loader2
-                      className="w-4 h-4 mr-2 animate-spin"
-                      aria-hidden="true"
-                    />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Signing in...
                   </>
                 ) : (
-                  <div className="flex items-center">
-                    <span>Sign in</span>
-
-                    <ArrowRight
-                      className="
-                        ml-2
-                        w-4
-                        h-4
-                        transition-transform
-                        group-hover:translate-x-0.5
-                      "
-                      aria-hidden="true"
-                    />
-                  </div>
+                  <span className="flex items-center">
+                    Sign in
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                  </span>
                 )}
               </Button>
             </form>
 
-            {/* -------------------------------------------------------------- */}
-            {/*                            REGISTER                            */}
-            {/* -------------------------------------------------------------- */}
+            <p className="mt-7 text-center text-sm text-zinc-500">
+              Don&apos;t have an account?{" "}
+              <Link
+                to="/register"
+                className="rounded-sm font-semibold underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                style={{ color: "var(--accent)" }}
+              >
+                Create account
+              </Link>
+            </p>
 
-            <div className="mt-8 text-center">
-              <p className="text-sm text-zinc-500">
-                Don't have an account?{" "}
-                <Link
-                  to="/register"
-                  className="
-                    font-medium
-                    text-black
-                    underline-offset-4
-                    hover:underline
-                    focus-visible:outline-none
-                    focus-visible:ring-2
-                    focus-visible:ring-black
-                    rounded-sm
-                  "
-                >
-                  Create account
-                </Link>
-              </p>
-            </div>
-
-            {/* Mobile Footer */}
-            <div className="lg:hidden mt-16 text-center">
-              <p className="text-[11px] text-zinc-400">
-                Secure access · © {new Date().getFullYear()}
-              </p>
+            <div className="mt-10 flex items-center justify-center gap-2 text-[11px] text-zinc-400 lg:hidden">
+              <ShieldCheck className="h-3.5 w-3.5" />
+              Secure access · © {new Date().getFullYear()}
             </div>
           </div>
         </section>
