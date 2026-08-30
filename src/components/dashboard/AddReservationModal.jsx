@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
+
 import {
   X,
   Users,
@@ -13,6 +14,7 @@ import {
   Sparkles,
   Table2,
 } from "lucide-react";
+
 import {
   VALID_START_TIMES,
   TABLES,
@@ -66,6 +68,7 @@ export default function AddReservationModal({
 
   const conflict = useMemo(() => {
     if (watchedTableMode !== "choose") return false;
+
     return hasConflict(
       allReservations,
       watchedTable,
@@ -84,6 +87,7 @@ export default function AddReservationModal({
 
   const suggestedTables = useMemo(() => {
     if (!conflict) return [];
+
     return getSuggestedTables(
       allReservations,
       watchedStartTime,
@@ -94,6 +98,7 @@ export default function AddReservationModal({
 
   const autoTable = useMemo(() => {
     if (watchedTableMode !== "auto") return null;
+
     return autoAssignTable(allReservations, watchedStartTime, watchedDate);
   }, [watchedTableMode, allReservations, watchedStartTime, watchedDate]);
 
@@ -104,12 +109,16 @@ export default function AddReservationModal({
   const onSubmit = (data) => {
     const startTime = Number(data.startTime);
     const endTime = getEndTime(startTime);
+
     let tableNumber;
+
     if (data.tableMode === "auto") {
       tableNumber = autoTable;
+
       if (!tableNumber) return;
     } else {
       tableNumber = Number(data.tableNumber);
+
       if (conflict) return;
     }
 
@@ -126,14 +135,17 @@ export default function AddReservationModal({
       note: data.note || "",
     });
   };
+
   const inputClass =
-    "w-full pl-9 pr-3 py-2.5 rounded-xl bg-white border border-slate-200 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-400 transition-all";
-  const labelClass = "text-xs font-semibold text-slate-600 mb-1 block";
+    "w-full pl-9 pr-3 py-2.5 rounded-xl bg-white border border-[#133951]/10 text-sm text-[#133951] placeholder:text-[#133951]/35 focus:outline-none focus:ring-2 focus:ring-[#5BAAAE]/25 focus:border-[#5BAAAE]/60 transition-all";
+
+  const labelClass = "text-xs font-semibold text-[#133951]/60 mb-1 block";
+
   const toggleBtn = (active) =>
     `flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
       active
-        ? "bg-slate-700 text-white shadow-sm"
-        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+        ? "bg-[#133951] text-white shadow-sm"
+        : "bg-[#133951]/5 text-[#133951]/60 hover:bg-[#133951]/10 hover:text-[#133951]"
     }`;
 
   return (
@@ -141,24 +153,42 @@ export default function AddReservationModal({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#133951]/25 backdrop-blur-sm"
       onClick={onClose}
     >
       <motion.div
-        initial={{ scale: 0.95, opacity: 0, y: 10 }}
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.95, opacity: 0, y: 10 }}
-        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+        initial={{
+          scale: 0.95,
+          opacity: 0,
+          y: 10,
+        }}
+        animate={{
+          scale: 1,
+          opacity: 1,
+          y: 0,
+        }}
+        exit={{
+          scale: 0.95,
+          opacity: 0,
+          y: 10,
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 300,
+          damping: 25,
+        }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto border border-slate-200"
+        className="bg-[#F8FAFB] rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto border border-[#133951]/10"
       >
-        <div className="flex items-center justify-between p-5 border-b border-slate-200 sticky top-0 bg-white z-10">
+        {/* Header */}
+        <div className="flex items-center justify-between p-5 border-b border-[#133951]/10 sticky top-0 bg-[#F8FAFB] z-10">
           <div className="flex items-center gap-2">
             {isWalkIn ? (
               <Sparkles className="w-5 h-5 text-[#5BAAAE]" />
             ) : (
-              <Calendar className="w-5 h-5 text-[#AD2B10]" />
+              <Calendar className="w-5 h-5 text-[#E2A300]" />
             )}
+
             <h2 className="font-display text-lg font-bold text-[#133951]">
               {editing
                 ? "Edit Reservation"
@@ -167,25 +197,32 @@ export default function AddReservationModal({
                   : "Add Reservation"}
             </h2>
           </div>
+
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-[#133951]/10 transition-colors"
+            className="p-1.5 rounded-lg hover:bg-[#133951]/5 transition-colors"
           >
-            <X className="w-5 h-5 text-[#133951]/60" />
+            <X className="w-5 h-5 text-[#133951]/50" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="p-5 space-y-4">
+          {/* Customer Name */}
           <div>
             <label className={labelClass}>Customer Name *</label>
+
             <div className="relative">
-              <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#133951]/35" />
+
               <input
-                {...register("customerName", { required: "Name is required" })}
+                {...register("customerName", {
+                  required: "Name is required",
+                })}
                 className={inputClass}
                 placeholder="Enter customer name"
               />
             </div>
+
             {errors.customerName && (
               <p className="text-xs text-[#AD2B10] mt-1">
                 {errors.customerName.message}
@@ -193,35 +230,48 @@ export default function AddReservationModal({
             )}
           </div>
 
+          {/* Phone / Guest Count */}
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className={labelClass}>Phone Number *</label>
+
               <div className="relative">
-                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#133951]/35" />
+
                 <input
-                  {...register("phone", { required: "Phone is required" })}
+                  {...register("phone", {
+                    required: "Phone is required",
+                  })}
                   className={inputClass}
                   placeholder="Phone number"
                 />
               </div>
+
               {errors.phone && (
                 <p className="text-xs text-[#AD2B10] mt-1">
                   {errors.phone.message}
                 </p>
               )}
             </div>
+
             <div>
               <label className={labelClass}>Guest Count *</label>
+
               <div className="relative">
-                <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#133951]/35" />
+
                 <input
                   type="number"
                   min="1"
-                  {...register("guestCount", { required: "Required", min: 1 })}
+                  {...register("guestCount", {
+                    required: "Required",
+                    min: 1,
+                  })}
                   className={inputClass}
                   placeholder="2"
                 />
               </div>
+
               {errors.guestCount && (
                 <p className="text-xs text-[#AD2B10] mt-1">
                   {errors.guestCount.message}
@@ -230,11 +280,14 @@ export default function AddReservationModal({
             </div>
           </div>
 
+          {/* Date / Time */}
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className={labelClass}>Reservation Date *</label>
+
               <div className="relative">
-                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#133951]/35" />
+
                 <input
                   type="date"
                   {...register("reservationDate", {
@@ -244,10 +297,13 @@ export default function AddReservationModal({
                 />
               </div>
             </div>
+
             <div>
               <label className={labelClass}>Reservation Time *</label>
+
               <div className="relative">
-                <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#133951]/35" />
+
                 <select {...register("startTime")} className={inputClass}>
                   {VALID_START_TIMES.map((t) => (
                     <option key={t} value={t}>
@@ -259,31 +315,38 @@ export default function AddReservationModal({
             </div>
           </div>
 
+          {/* Table Selection */}
           <div>
             <label className={labelClass}>Table Selection</label>
+
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => setValue("tableMode", "auto")}
                 className={toggleBtn(watchedTableMode === "auto")}
               >
-                <Sparkles className="w-4 h-4" /> Auto Assign
+                <Sparkles className="w-4 h-4" />
+                Auto Assign
               </button>
+
               <button
                 type="button"
                 onClick={() => setValue("tableMode", "choose")}
                 className={toggleBtn(watchedTableMode === "choose")}
               >
-                <Table2 className="w-4 h-4" /> Choose Table
+                <Table2 className="w-4 h-4" />
+                Choose Table
               </button>
             </div>
           </div>
 
+          {/* Auto Table */}
           {watchedTableMode === "auto" && (
-            <div className="rounded-xl bg-sky-50 border border-sky-200 border border-[#133951]/10 p-3 flex items-center gap-2">
+            <div className="rounded-xl bg-[#5BAAAE]/[0.07] border border-[#5BAAAE]/20 p-3 flex items-center gap-2">
               {autoTable ? (
                 <>
                   <Check className="w-4 h-4 text-[#5BAAAE] shrink-0" />
+
                   <span className="text-sm text-[#133951]">
                     Suggested table: <strong>Table {autoTable}</strong>
                   </span>
@@ -291,6 +354,7 @@ export default function AddReservationModal({
               ) : (
                 <>
                   <AlertCircle className="w-4 h-4 text-[#AD2B10] shrink-0" />
+
                   <span className="text-sm text-[#AD2B10]">
                     No tables available for this time slot.
                   </span>
@@ -299,10 +363,12 @@ export default function AddReservationModal({
             </div>
           )}
 
+          {/* Choose Table */}
           {watchedTableMode === "choose" && (
             <div>
               <div className="relative">
-                <Table2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Table2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#133951]/35" />
+
                 <select {...register("tableNumber")} className={inputClass}>
                   {TABLES.map((t) => (
                     <option key={t} value={t}>
@@ -311,25 +377,29 @@ export default function AddReservationModal({
                   ))}
                 </select>
               </div>
+
               {conflict && (
-                <div className="mt-2 rounded-xl bg-red-50 border border-red-200 border border-[#AD2B10]/15 p-3">
+                <div className="mt-2 rounded-xl bg-[#AD2B10]/[0.06] border border-[#AD2B10]/15 p-3">
                   <div className="flex items-center gap-1.5 mb-1">
-                    <AlertCircle className="w-4 h-4 text-red-600] shrink-0" />
-                    <span className="text-sm font-medium text-red-600">
+                    <AlertCircle className="w-4 h-4 text-[#AD2B10] shrink-0" />
+
+                    <span className="text-sm font-medium text-[#AD2B10]">
                       This table is unavailable.
                     </span>
                   </div>
+
                   {suggestedTables.length > 0 && (
                     <div className="flex items-center gap-1.5 flex-wrap mt-1.5">
-                      <span className="text-xs text-[#133951]/60">
+                      <span className="text-xs text-[#133951]/50">
                         Suggested tables:
                       </span>
+
                       {suggestedTables.map((t) => (
                         <button
                           key={t}
                           type="button"
                           onClick={() => setValue("tableNumber", t)}
-                          className="px-2 py-0.5 rounded-full bg-[#133951]/10 text-xs font-medium text-[#133951] hover:bg-[#133951]/20 transition-colors"
+                          className="px-2 py-0.5 rounded-full bg-[#133951]/[0.07] text-xs font-medium text-[#133951] hover:bg-[#133951]/15 transition-colors"
                         >
                           Table {t}
                         </button>
@@ -341,8 +411,10 @@ export default function AddReservationModal({
             </div>
           )}
 
+          {/* Requested Table */}
           <div>
             <label className={labelClass}>Requested Table</label>
+
             <div className="flex gap-2">
               {["Yes", "No"].map((opt) => (
                 <button
@@ -357,31 +429,36 @@ export default function AddReservationModal({
             </div>
           </div>
 
+          {/* Special Note */}
           <div>
             <label className={labelClass}>Special Note</label>
+
             <div className="relative">
-              <FileText className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
+              <FileText className="absolute left-3 top-3 w-4 h-4 text-[#133951]/35" />
+
               <textarea
                 {...register("note")}
                 rows={2}
-                className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white/70 border border-[#133951]/10 text-sm text-[#133951] focus:outline-none focus:ring-2 focus:ring-[#5BAAAE]/30 transition-all resize-none"
+                className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white border border-[#133951]/10 text-sm text-[#133951] placeholder:text-[#133951]/35 focus:outline-none focus:ring-2 focus:ring-[#5BAAAE]/25 focus:border-[#5BAAAE]/60 transition-all resize-none"
                 placeholder="Any special requests..."
               />
             </div>
           </div>
 
+          {/* Actions */}
           <div className="flex gap-3 pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 text-[#133951]/70 text-sm font-medium hover:bg-white/70 transition-colors"
+              className="flex-1 py-2.5 rounded-xl bg-[#133951]/[0.05] text-[#133951]/65 text-sm font-medium hover:bg-[#133951]/10 transition-colors"
             >
               Cancel
             </button>
+
             <button
               type="submit"
               disabled={isDisabled}
-              className="flex-1 py-2.5 rounded-xl bg-[#133951] text-[#EDE2CD] text-sm font-semibold shadow-md hover:bg-[#0f2d40] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              className="flex-1 py-2.5 rounded-xl bg-[#133951] text-white text-sm font-semibold shadow-md hover:bg-[#0F2D40] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {editing ? "Update" : "Save"}
             </button>

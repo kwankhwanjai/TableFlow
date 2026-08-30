@@ -5,26 +5,36 @@
 @theme inline {
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
+
   --color-card: hsl(var(--card));
   --color-card-foreground: hsl(var(--card-foreground));
+
   --color-popover: hsl(var(--popover));
   --color-popover-foreground: hsl(var(--popover-foreground));
+
   --color-primary: hsl(var(--primary));
   --color-primary-foreground: hsl(var(--primary-foreground));
+
   --color-secondary: hsl(var(--secondary));
   --color-secondary-foreground: hsl(var(--secondary-foreground));
+
   --color-muted: hsl(var(--muted));
   --color-muted-foreground: hsl(var(--muted-foreground));
+
   --color-accent: hsl(var(--accent));
   --color-accent-foreground: hsl(var(--accent-foreground));
+
   --color-destructive: hsl(var(--destructive));
   --color-destructive-foreground: hsl(var(--destructive-foreground));
+
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
+
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
+
   --font-heading: var(--font-heading);
   --font-body: var(--font-body);
   --font-display: var(--font-display);
@@ -33,55 +43,105 @@
 
 @layer base {
   :root {
-    /* Palette No.8: #133951, #5BAAAE, #EDE2CD, #E2A300, #AD2B10 */
-    --background: 36 33% 90%;
-    --foreground: 205 54% 14%;
-    --card: 36 30% 94%;
-    --card-foreground: 205 54% 14%;
-    --popover: 36 30% 94%;
-    --popover-foreground: 205 54% 14%;
-    --primary: 205 54% 20%;
-    --primary-foreground: 36 33% 90%;
+    /*
+      CI Palette
+      Navy  : #133951
+      Teal  : #5BAAAE
+      Gold  : #E2A300
+      Red   : #AD2B10
+
+      Neutral UI
+      Background : #F8FAFB
+      Card       : #FFFFFF
+    */
+
+    /* Page */
+    --background: 200 27% 98%;
+    --foreground: 203 62% 20%;
+
+    /* Cards */
+    --card: 0 0% 100%;
+    --card-foreground: 203 62% 20%;
+
+    /* Popovers / Dropdowns / Dialogs */
+    --popover: 0 0% 100%;
+    --popover-foreground: 203 62% 20%;
+
+    /* Navy */
+    --primary: 203 62% 20%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Gold */
     --secondary: 43 100% 44%;
-    --secondary-foreground: 205 54% 14%;
-    --muted: 36 25% 83%;
-    --muted-foreground: 205 30% 40%;
-    --accent: 183 33% 52%;
-    --accent-foreground: 205 54% 14%;
-    --destructive: 13 82% 37%;
-    --destructive-foreground: 36 33% 90%;
-    --border: 205 20% 75%;
-    --input: 205 20% 75%;
-    --ring: 205 54% 20%;
+    --secondary-foreground: 203 62% 20%;
+
+    /* Soft Neutral */
+    --muted: 200 27% 96%;
+    --muted-foreground: 204 13% 48%;
+
+    /* Teal */
+    --accent: 183 34% 52%;
+    --accent-foreground: 203 62% 20%;
+
+    /* Red */
+    --destructive: 10 83% 37%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* UI Lines */
+    --border: 196 19% 89%;
+    --input: 196 19% 89%;
+
+    /* Focus */
+    --ring: 183 34% 52%;
+
     --radius: 1rem;
+
     --font-heading: "Playfair Display", serif;
     --font-body: "Inter", sans-serif;
     --font-display: "Playfair Display", serif;
+
     --font-mono:
       ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
   }
 
   .dark {
-    --background: 205 54% 10%;
-    --foreground: 36 33% 90%;
-    --card: 205 54% 14%;
-    --card-foreground: 36 33% 90%;
-    --popover: 205 54% 14%;
-    --popover-foreground: 36 33% 90%;
-    --primary: 43 100% 44%;
-    --primary-foreground: 205 54% 10%;
-    --secondary: 13 82% 37%;
-    --secondary-foreground: 36 33% 90%;
-    --muted: 205 40% 20%;
-    --muted-foreground: 36 25% 60%;
-    --accent: 183 33% 42%;
-    --accent-foreground: 36 33% 90%;
-    --destructive: 13 82% 37%;
-    --destructive-foreground: 36 33% 90%;
-    --border: 205 40% 25%;
-    --input: 205 40% 25%;
-    --ring: 43 100% 44%;
+    /* Main background */
+    --background: 203 62% 10%;
+    --foreground: 200 27% 96%;
+
+    /* Cards */
+    --card: 203 55% 14%;
+    --card-foreground: 200 27% 96%;
+
+    /* Popovers */
+    --popover: 203 55% 14%;
+    --popover-foreground: 200 27% 96%;
+
+    /* Teal becomes primary accent in dark mode */
+    --primary: 183 34% 52%;
+    --primary-foreground: 203 62% 10%;
+
+    /* Gold */
+    --secondary: 43 100% 44%;
+    --secondary-foreground: 203 62% 10%;
+
+    /* Muted surface */
+    --muted: 203 40% 18%;
+    --muted-foreground: 200 15% 68%;
+
+    /* Teal */
+    --accent: 183 34% 45%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Red */
+    --destructive: 10 72% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 203 35% 25%;
+    --input: 203 35% 25%;
+
+    --ring: 183 34% 52%;
   }
 }
 
@@ -89,6 +149,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground font-body;
   }
@@ -98,18 +159,30 @@
   .font-display {
     font-family: "Playfair Display", serif;
   }
+
   .scrollbar-thin::-webkit-scrollbar {
     height: 6px;
     width: 6px;
   }
+
   .scrollbar-thin::-webkit-scrollbar-track {
     background: transparent;
   }
+
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: rgba(19, 57, 81, 0.2);
-    border-radius: 3px;
+    background: rgba(19, 57, 81, 0.16);
+    border-radius: 999px;
   }
+
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background: rgba(19, 57, 81, 0.4);
+    background: rgba(19, 57, 81, 0.3);
+  }
+
+  .dark .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgba(91, 170, 174, 0.25);
+  }
+
+  .dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: rgba(91, 170, 174, 0.4);
   }
 }
