@@ -360,7 +360,7 @@ export default function Login() {
                     className="rounded-sm text-xs font-medium underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                     style={{ color: "var(--accent)" }}
                   >
-                    Forgot password?
+                    | Forgot password?
                   </Link>
                 </div>
 
